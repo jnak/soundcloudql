@@ -2,7 +2,9 @@ import {
   GraphQLID,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLSchema
+  GraphQLSchema,
+  GraphQLList,
+  GraphQLBoolean,
 } from 'graphql';
 
 import {
@@ -52,6 +54,22 @@ var rootType = new GraphQLObjectType({
         }
       }
     },
+    users: {
+      type: new GraphQLList(UserType),
+      args: {
+        ids: { type: new GraphQLNonNull(new GraphQLList(GraphQLID)) }
+      },
+      description: 'Find user by ids',
+      resolve: (_, {ids}) => {
+        if (ids === undefined || ids === null) {
+          throw new Error('must provide id');
+        }
+        
+        return ids.map((userId) => {
+          return JSONDataWithPath('/users/' + userId);  
+        });
+      }
+    },
     playlist: {
       type: PlaylistType,
       args: {
@@ -72,7 +90,7 @@ var rootType = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(GraphQLID) }
       },
       description: 'Find comment by id',
-      resolve: (_, args) => {
+      resolve: (_, {args}) => {
         if (args.id !== undefined && args.id !== null) {
           return JSONDataWithPath('/comments/' + args.id);
         } else {
@@ -97,4 +115,24 @@ var rootType = new GraphQLObjectType({
   })
 });
 
-export var SoundCloudGraphQLSchema = new GraphQLSchema({ query: rootType });
+var mutationType = new GraphQLObjectType({
+    fields: {
+      followUser: {
+        type: GraphQLBoolean,
+        args: { 
+          userId: {type: GraphQLID} 
+        },
+        resolve: (_, {userId}) => {
+          return JSONDataWithPath(`/users/212979/followings/${userId}`, 'put')
+          console.log('follow user');
+          return true;
+        },
+      },
+    },
+    name: 'Mutation',
+  })
+
+export var SoundCloudGraphQLSchema = new GraphQLSchema({ 
+  query: rootType,
+  mutation: mutationType,
+});

@@ -28,6 +28,8 @@
     "express-graphql": "^0.4.9",
     "foreman": "^1.4.1",
     "graphql": "^0.4.16",
+    "soundcloud": "^3.1.0",
+    "superagent": "^1.8.3",
     "unirest": "^0.4.2"
   },
   "devDependencies": {

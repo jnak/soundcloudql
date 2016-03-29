@@ -148,7 +148,16 @@ var TrackType = new GraphQLObjectType({
       function (root) {
         return '/tracks/' + root.id + '/comments';
       }
-    )
+    ),
+    favoritersCollection: collectionType(
+      'TrackFavoritesCollection',
+      UserType,
+      'The favorites of the track.',
+      {},
+      function (root) {
+        return '/tracks/' + root.id + '/favoriters';
+      }
+    ),
   })
 });
 
