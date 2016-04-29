@@ -11,7 +11,7 @@ import {
 } from '../../api';
 
 import UserType from './user';
-import TrackType from './track';
+import {TrackType} from './track';
 
 var CommentType = new GraphQLObjectType({
   name: 'Comment',

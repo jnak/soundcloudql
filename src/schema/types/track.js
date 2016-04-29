@@ -162,7 +162,6 @@ var TrackType = new GraphQLObjectType({
 });
 
 export {
-  TrackType as default,
   TrackType,
   LicenseType
 };

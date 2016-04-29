@@ -11,7 +11,7 @@ import {
   JSONDataWithPath
 } from '../api';
 
-import TrackType from './types/track';
+import {TrackType} from './types/track';
 import UserType from './types/user';
 import PlaylistType from './types/playlist';
 import CommentType from './types/comment';

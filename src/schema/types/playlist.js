@@ -12,7 +12,7 @@ import {
 
 import { collectionType } from './collection';
 
-import TrackType from './track';
+import { TrackType } from './track';
 import UserType from './user';
 
 var PlaylistType = new GraphQLObjectType({

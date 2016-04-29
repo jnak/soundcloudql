@@ -12,7 +12,7 @@ import {
 import { collectionType } from './collection';
 
 import UserType from './user';
-import TrackType from './track';
+import {TrackType} from './track';
 
 var GroupType = new GraphQLObjectType({
   name: 'Group',
