@@ -5,32 +5,31 @@ import {
   GraphQLNonNull,
   GraphQLObjectType
 } from 'graphql';
-import {
-  connectionDefinitions,
-  connectionArgs,
-  connectionFromArray,
-} from 'graphql-relay';
 
-import { collectionType } from './collection';
+import { 
+  relaySoundcloudResolve,
+  relayCollectionType,
+} from './collection';
 
 import { TrackType } from './track';
-import PlaylistType from './playlist';
-import CommentType from './comment';
-import GroupType from './group';
-import { JSONDataWithPath } from '../../api';
+import { PlaylistType } from './playlist';
+import { CommentType } from './comment';
+import { GroupType } from './group';
+
+let _extraFields = {};
+
+export function addFieldsToUserType(fields) {
+  _extraFields = {
+    ..._extraFields,
+    ...fields,
+  }
+}
 
 
-
-var UserType = new GraphQLObjectType({
+export const UserType = new GraphQLObjectType({
   name: 'User',
   description: 'A user on SoundCloud.',
   fields: () => {
-    let {connectionType: postedTrackConnection} = connectionDefinitions({
-      name: 'UserPostedTracks',
-      nodeType: TrackType,
-      //resolveNode: edge => getObjectFromUrl(edge.node),
-    });
-
     return {
       id: {
         type: new GraphQLNonNull(GraphQLID),
@@ -55,17 +54,15 @@ var UserType = new GraphQLObjectType({
       country: {
         type: GraphQLString,
         description: 'The country of the user.',
-        resolve: (user) => user.country
       },
       city: {
         type: GraphQLString,
         description: 'The city of the user.',
-        resolve: (user) => user.city
+        
       },
       description: {
         type: GraphQLString,
         description: 'The description of the user.',
-        resolve: (user) => user.description
       },
       playlistCount: {
         type: GraphQLInt,
@@ -87,80 +84,42 @@ var UserType = new GraphQLObjectType({
         description: 'The number of followings of the user.',
         resolve: (user) => user.followings_count
       },
-      postedTracks: {
-        type: postedTrackConnection,
-        args: connectionArgs,
-        resolve: (user, args) => {
-          return JSONDataWithPath('/users/' + user.id + '/tracks').
-            then((tracks) => connectionFromArray(tracks, args));
-        }
-      },
-      postedTracksCollection: collectionType(
-        'UserPostedTracksCollection',
+      tracks: relayCollectionType(
+        'UserPostedPaginated',
         TrackType,
-        'The public tracks of the user.',
-        {},
-        function (root) {
-          return '/users/' + root.id + '/tracks';
-        }
+        (root) => `/users/${root.id}/tracks`
       ),
-      postedPlaylistsCollection: collectionType(
-        'UserPostedPlaylistsCollection',
+      playlists: relayCollectionType(
+        'UserPostedPlaylists',
         PlaylistType,
-        'The public playlists of the user.',
-        {},
-        function (root) {
-          return '/users/' + root.id + '/playlists';
-        }
+        (root) => `/users/${root.id}/playlists`
       ),
-      likedTracksCollection: collectionType(
-        'UserLikedTracksCollection',
+      favorites: relayCollectionType(
+        'UserFavoritedTracks',
         TrackType,
-        'The liked tracks of the user.',
-        {},
-        function (root) {
-          return '/users/' + root.id + '/favorites';
-        }
+        (root) => `/users/${root.id}/favorites`
       ),
-      commentsCollection: collectionType(
-        'UserCommentsCollection',
+      comments: relayCollectionType(
+        'UserComments',
         CommentType,
-        'The public comments of the user.',
-        {},
-        function (root) {
-          return '/users/' + root.id + '/comments';
-        }
+        (root) => `/users/${root.id}/comments`
       ),
-      followersCollection: collectionType(
-        'UserFollowersCollection',
+      followers: relayCollectionType(
+        'UserFollowers',
         UserType,
-        'The followers of the user.',
-        {},
-        function (root) {
-          return '/users/' + root.id + '/followers';
-        }
+        (root) => `/users/${root.id}/followers`
       ),
-      followingsCollection: collectionType(
-        'UserFollowingsCollection',
+      followings: relayCollectionType(
+        'UserFollowings',
         UserType,
-        'The followings of the user.',
-        {},
-        function (root) {
-          return '/users/' + root.id + '/followings';
-        }
+        (root) => `/users/${root.id}/followings`
       ),
-      groupsCollection: collectionType(
-        'UserGroupsCollection',
+      groups: relayCollectionType(
+        'UserGroups',
         GroupType,
-        'The groups of the user.',
-        {},
-        function (root) {
-          return '/users/' + root.id + '/groups';
-        }
-      )
+        (root) => `/users/${root.id}/groups`
+      ),
+      ..._extraFields,
     }
   },
 });
-
-
-export default UserType;

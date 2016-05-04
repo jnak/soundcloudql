@@ -9,29 +9,35 @@ import {
   JSONDataWithPath
 } from '../../api';
 
-import { collectionType } from './collection';
+import { relayCollectionType } from './collection';
 
-import UserType from './user';
+import {UserType} from './user';
 import {TrackType} from './track';
 
-var GroupType = new GraphQLObjectType({
+let _extraFields = {};
+
+export function addFieldsToGroupType(fields) {
+  _extraFields = {
+    ..._extraFields,
+    ...fields,
+  }
+} 
+
+export const GroupType = new GraphQLObjectType({
   name: 'Group',
   description: 'A group on SoundCloud.',
   fields: () => ({
     id: {
       type: new GraphQLNonNull(GraphQLID),
       description: 'The identifier of the group.',
-      resolve: (group) => group.id
     },
     name: {
       type: GraphQLString,
       description: 'The name of the group.',
-      resolve: (group) => group.name
     },
     description: {
       type: GraphQLString,
       description: 'The description of the group.',
-      resolve: (group) => group.description
     },
     createdAt: {
       type: GraphQLString,
@@ -41,56 +47,32 @@ var GroupType = new GraphQLObjectType({
     creatorConnection: {
       type: new GraphQLNonNull(UserType),
       description: 'The creator of the group.',
-      resolve: (root) => {
-        return JSONDataWithPath('/users/' + root.creator.id);
-      }
+      resolve: (root) => JSONDataWithPath('/users/' + root.creator.id),
     },
-    usersCollection: collectionType(
-      'GroupUsersCollection',
+    users: relayCollectionType(
+      'GroupUsers',
       UserType,
-      'The users who contributed to, joined or moderate the group.',
-      {},
-      function (root) {
-        return '/groups/' + root.id + '/users';
-      }
+      (root) => `/groups/${root.id}/users`
     ),
-    moderatorsCollection: collectionType(
-      'GroupModeratorsCollection',
+    moderators: relayCollectionType(
+      'GroupModerators',
       UserType,
-      'The users who moderate the group.',
-      {},
-      function (root) {
-        return '/groups/' + root.id + '/moderators';
-      }
+      (root) => `/groups/${root.id}/moderators`
     ),
-    membersCollection: collectionType(
-      'GroupMembersCollection',
+    members: relayCollectionType(
+      'GroupMembers',
       UserType,
-      'The users who joined the group.',
-      {},
-      function (root) {
-        return '/groups/' + root.id + '/members';
-      }
+      (root) => `/groups/${root.id}/members`
     ),
-    contributorsCollection: collectionType(
-      'GroupContributorsCollection',
+    contributors: relayCollectionType(
+      'GroupContributors',
       UserType,
-      'The users who contributed a track to the group.',
-      {},
-      function (root) {
-        return '/groups/' + root.id + '/contributors';
-      }
+      (root) => `/groups/${root.id}/contributors`
     ),
-    tracksCollection: collectionType(
-      'GroupTracksCollection',
+    tracks: relayCollectionType(
+      'GroupTracks',
       TrackType,
-      'The list of contributed and approved tracks.',
-      {},
-      function (root) {
-        return '/groups/' + root.id + '/tracks';
-      }
-    )
+      (root) => `/groups/${root.id}/tracks`
+    ),
   })
 });
-
-export default GroupType;

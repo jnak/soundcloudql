@@ -1,18 +1,36 @@
-import express from 'express';
+export { 
+  rootType,
+} from './schema/root';
 
-import {
-  SoundCloudGraphQLSchema
-} from './schema';
+export { 
+  CommentType,
+  addFieldsToCommentType,
+} from './schema/types/comment';
 
-var graphqlHTTP = require('express-graphql');
+export { 
+  GroupType,
+  addFieldsToGroupType,
+} from './schema/types/group';
 
-var app = express();
+export { 
+  PlaylistType,
+  addFieldsToPlaylistType,
+} from './schema/types/playlist';
 
-app.use('/graphql', graphqlHTTP({
-  schema: SoundCloudGraphQLSchema,
-  graphiql: true
-}));
+export { 
+  SearchUsersType,
+  SearchTracksType,
+  SearchPlaylistsType,
+  SearchGroupsType,
+} from './schema/types/search';
 
-app.listen(process.env.PORT, function () {
-  console.log('Listening on port ' + process.env.PORT);
-});
+export { 
+  TrackType,
+  LicenseType,
+  addFieldsToTrackType,
+} from './schema/types/track';
+
+export { 
+  UserType,
+  addFieldsToUserType,
+} from './schema/types/user';

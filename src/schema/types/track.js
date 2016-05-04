@@ -7,16 +7,13 @@ import {
   GraphQLObjectType
 } from 'graphql';
 
-import {
-  JSONDataWithPath
-} from '../../api';
+import { JSONDataWithPath } from '../../api';
+import { relayCollectionType } from './collection';
 
-import { collectionType } from './collection';
+import { UserType } from './user';
+import { CommentType } from './comment';
 
-import UserType from './user';
-import CommentType from './comment';
-
-var LicenseType = new GraphQLEnumType({
+export const LicenseType = new GraphQLEnumType({
   name: 'License',
   description: 'License under which a track is published',
   values: {
@@ -59,19 +56,26 @@ var LicenseType = new GraphQLEnumType({
   }
 });
 
-var TrackType = new GraphQLObjectType({
+let _extraFields = {};
+
+export function addFieldsToTrackType(fields) {
+  _extraFields = {
+    ..._extraFields,
+    ...fields,
+  }
+}
+
+export const TrackType = new GraphQLObjectType({
   name: 'Track',
   description: 'A track on SoundCloud.',
   fields: () => ({
     id: {
       type: new GraphQLNonNull(GraphQLID),
       description: 'The identifier of the track.',
-      resolve: (track) => track.id
     },
     title: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'The title of the track.',
-      resolve: (track) => track.title
     },
     createdAt: {
       type: new GraphQLNonNull(GraphQLString),
@@ -81,7 +85,6 @@ var TrackType = new GraphQLObjectType({
     description: {
       type: GraphQLString,
       description: 'The description of the track.',
-      resolve: (track) => track.description
     },
     commentCount: {
       type: GraphQLInt,
@@ -126,42 +129,26 @@ var TrackType = new GraphQLObjectType({
     duration: {
       type: new GraphQLNonNull(GraphQLInt),
       description: 'The duration of the track in milliseconds.',
-      resolve: (track) => track.duration
     },
     license: {
       type: LicenseType,
       description: 'The license of the track.',
-      resolve: (track) => track.license
     },
-    userConnection: {
+    owner: {
       type: new GraphQLNonNull(UserType),
       description: 'The user who posted the track.',
-      resolve: (root) => {
-        return JSONDataWithPath('/users/' + root.user_id);
-      }
+      resolve: (root) => JSONDataWithPath('/users/' + root.user_id),
     },
-    commentsCollection: collectionType(
-      'TrackCommentsCollection',
+    comments: relayCollectionType(
+      'TrackComments',
       CommentType,
-      'The comments on the track.',
-      {},
-      function (root) {
-        return '/tracks/' + root.id + '/comments';
-      }
+      (root) => `/tracks/${root.id}/comments`
     ),
-    favoritersCollection: collectionType(
-      'TrackFavoritesCollection',
+    favoriters: relayCollectionType(
+      'TrackFavoriters',
       UserType,
-      'The favorites of the track.',
-      {},
-      function (root) {
-        return '/tracks/' + root.id + '/favoriters';
-      }
+      (root) => `/tracks/${root.id}/favoriters`
     ),
+    ..._extraFields,
   })
 });
-
-export {
-  TrackType,
-  LicenseType
-};

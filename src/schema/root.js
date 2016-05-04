@@ -2,7 +2,6 @@ import {
   GraphQLID,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLSchema,
   GraphQLList,
   GraphQLBoolean,
 } from 'graphql';
@@ -11,19 +10,20 @@ import {
   JSONDataWithPath
 } from '../api';
 
-import {TrackType} from './types/track';
-import UserType from './types/user';
-import PlaylistType from './types/playlist';
-import CommentType from './types/comment';
-import GroupType from './types/group';
+import { TrackType } from './types/track';
+import { UserType } from './types/user';
+import { PlaylistType } from './types/playlist';
+import { CommentType } from './types/comment';
+import { GroupType } from './types/group';
 import {
   SearchTracksType,
   SearchPlaylistsType,
   SearchGroupsType,
-  SearchUsersType
+  SearchUsersType,
 } from './types/search';
 
-var rootType = new GraphQLObjectType({
+
+export const rootType = new GraphQLObjectType({
   name: 'Root',
   fields: () => ({
     track: {
@@ -113,26 +113,4 @@ var rootType = new GraphQLObjectType({
     searchGroups: SearchGroupsType,
     searchUsers: SearchUsersType
   })
-});
-
-var mutationType = new GraphQLObjectType({
-    fields: {
-      followUser: {
-        type: GraphQLBoolean,
-        args: { 
-          userId: {type: GraphQLID} 
-        },
-        resolve: (_, {userId}) => {
-          return JSONDataWithPath(`/users/212979/followings/${userId}`, 'put')
-          console.log('follow user');
-          return true;
-        },
-      },
-    },
-    name: 'Mutation',
-  })
-
-export var SoundCloudGraphQLSchema = new GraphQLSchema({ 
-  query: rootType,
-  mutation: mutationType,
 });

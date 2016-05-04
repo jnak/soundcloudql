@@ -8,11 +8,11 @@ import {
 
 import { collectionType } from './collection';
 import { LicenseType, TrackType } from './track';
-import UserType from './user';
-import PlaylistType from './playlist';
-import GroupType from './group';
+import { UserType } from './user';
+import { PlaylistType } from './playlist';
+import { GroupType } from './group';
 
-var SearchUsersType = collectionType(
+export const SearchUsersType = collectionType(
   'SearchUsersCollection',
   UserType,
   'Search for users on SoundCloud',
@@ -26,7 +26,7 @@ var SearchUsersType = collectionType(
     return '/users?q=' + encodeURIComponent(args.q);
   });
 
-var SearchTracksType = collectionType(
+export const SearchTracksType = collectionType(
   'SearchTracksCollection',
   TrackType,
   'Search for tracks on SoundCloud',
@@ -79,7 +79,7 @@ var SearchTracksType = collectionType(
     return path;
   });
 
-var SearchPlaylistsType = collectionType(
+export const SearchPlaylistsType = collectionType(
   'SearchPlaylistsCollection',
   PlaylistType,
   'Search for playlists on SoundCloud',
@@ -93,7 +93,7 @@ var SearchPlaylistsType = collectionType(
     return '/playlists?q=' + encodeURIComponent(args.q);
   });
 
-var SearchGroupsType = collectionType(
+export const SearchGroupsType = collectionType(
   'SearchGroupsCollection',
   GroupType,
   'Search for groups on SoundCloud',
@@ -105,12 +105,5 @@ var SearchGroupsType = collectionType(
   },
   function (root, args) {
     return '/groups?q=' + encodeURIComponent(args.q);
-  });
-
-export {
-  SearchTracksType as default,
-  SearchTracksType,
-  SearchPlaylistsType,
-  SearchGroupsType,
-  SearchUsersType
-};
+  }
+);

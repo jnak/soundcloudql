@@ -10,24 +10,32 @@ import {
   JSONDataWithPath
 } from '../../api';
 
-import { collectionType } from './collection';
+import { relayCollectionType } from './collection';
 
 import { TrackType } from './track';
-import UserType from './user';
+import { UserType } from './user';
 
-var PlaylistType = new GraphQLObjectType({
+
+let _extraFields = {};
+
+export function addFieldsToPlaylistType(fields) {
+  _extraFields = {
+    ..._extraFields,
+    ...fields,
+  }
+}  
+
+export const PlaylistType = new GraphQLObjectType({
   name: 'Playlist',
   description: 'A playlist on SoundCloud.',
   fields: () => ({
     id: {
       type: new GraphQLNonNull(GraphQLID),
       description: 'The identifier of the playlist.',
-      resolve: (playlist) => playlist.id
     },
     title: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'The title of the playlist.',
-      resolve: (playlist) => playlist.title
     },
     createdAt: {
       type: GraphQLString,
@@ -42,7 +50,6 @@ var PlaylistType = new GraphQLObjectType({
     description: {
       type: GraphQLString,
       description: 'The description of the playlist.',
-      resolve: (playlist) => playlist.description
     },
     artworkUrl: {
       type: GraphQLString,
@@ -52,30 +59,22 @@ var PlaylistType = new GraphQLObjectType({
     duration: {
       type: GraphQLInt,
       description: 'The duration of the playlist in milliseconds.',
-      resolve: (playlist) => playlist.duration
     },
     tracksCount: {
       type: GraphQLInt,
       description: 'The number of tracks in the playlist.',
       resolve: (playlist) => playlist.track_count
     },
-    userConnection: {
+    owner: {
       type: new GraphQLNonNull(UserType),
       description: 'The user who posted the playlist.',
-      resolve: (root) => {
-        return JSONDataWithPath('/users/' + root.user_id);
-      }
+      resolve: (root) => JSONDataWithPath('/users/' + root.user_id),
     },
-    tracksCollection: collectionType(
-      'PlaylistTracksCollection',
+    tracks: relayCollectionType(
+      'PlaylistTracks',
       TrackType,
-      'The tracks of the playlist',
-      {},
-      function (root) {
-        return '/playlists/' + root.id + '/tracks';
-      }
-    )
-  })
+      (root) => `/playlists/${root.id}/tracks`
+    ),
+    ..._extraFields
+  }),
 });
-
-export default PlaylistType;
