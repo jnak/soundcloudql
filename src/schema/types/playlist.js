@@ -68,7 +68,7 @@ export const PlaylistType = new GraphQLObjectType({
     owner: {
       type: new GraphQLNonNull(UserType),
       description: 'The user who posted the playlist.',
-      resolve: (root) => JSONDataWithPath('/users/' + root.user_id),
+      resolve: (root, args, {loaders}) => loaders.soundcloud.load('/users/' + root.user_id),
     },
     tracks: relayCollectionType(
       'PlaylistTracks',

@@ -46,28 +46,12 @@ export const rootType = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(GraphQLID) }
       },
       description: 'Find user by id',
-      resolve: (_, args) => {
+      resolve: (_, args, {loaders}) => {
         if (args.id !== undefined && args.id !== null) {
-          return JSONDataWithPath('/users/' + args.id);
+          return loaders.soundcloud.load('/users/' + args.id);
         } else {
           throw new Error('must provide id');
         }
-      }
-    },
-    users: {
-      type: new GraphQLList(UserType),
-      args: {
-        ids: { type: new GraphQLNonNull(new GraphQLList(GraphQLID)) }
-      },
-      description: 'Find user by ids',
-      resolve: (_, {ids}) => {
-        if (ids === undefined || ids === null) {
-          throw new Error('must provide id');
-        }
-        
-        return ids.map((userId) => {
-          return JSONDataWithPath('/users/' + userId);  
-        });
       }
     },
     playlist: {
