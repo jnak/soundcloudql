@@ -1,8 +1,8 @@
 {
-  "name": "soundcloudql",
+  "name": "soundcloudql ",
   "version": "1.0.0",
   "description": "GraphQL SoundCloud api",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": "https://github.com/garriguv/soundcloudql",
   "scripts": {
     "test": "npm run lint && npm run testonly",

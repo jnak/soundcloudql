@@ -1,5 +1,9 @@
 export { 
-  rootType,
+  exposeSchema
+} from './exposeSchema'; 
+
+export { 
+  rootQueryType,
 } from './schema/root';
 
 export { 
@@ -34,3 +38,12 @@ export {
   UserType,
   addFieldsToUserType,
 } from './schema/types/user';
+
+export {
+  GraphQLSchema,
+  GraphQLBoolean,
+  GraphQLString,  
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLID,
+} from 'graphql';

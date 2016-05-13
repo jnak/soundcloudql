@@ -23,8 +23,8 @@ import {
 } from './types/search';
 
 
-export const rootType = new GraphQLObjectType({
-  name: 'Root',
+export const rootQueryType = new GraphQLObjectType({
+  name: 'RootQuery',
   fields: () => ({
     track: {
       type: TrackType,
@@ -97,4 +97,16 @@ export const rootType = new GraphQLObjectType({
     searchGroups: SearchGroupsType,
     searchUsers: SearchUsersType
   })
+});
+
+export const rootMutationType = new GraphQLObjectType({
+  name: 'RootMutation',
+  fields: () => {
+    return {
+      id: {
+        type: new GraphQLNonNull(GraphQLID),
+        description: 'Find playlist by id',
+      }
+    }
+  },
 });

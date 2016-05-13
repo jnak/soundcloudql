@@ -2,10 +2,14 @@ import { apiJSONDataWithPath } from './remote';
 
 import {
   writeFile,
-  readFile
+  readFile,
 } from 'fs';
 
-var cachePath = 'src/api/cache.json';
+import {
+  join
+} from 'path';
+
+var cachePath = join(__dirname, 'cache.json');
 
 function JSONCache() {
   return new Promise( function (resolve, reject) {

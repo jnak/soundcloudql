@@ -36,7 +36,7 @@
 
 import http from 'http';
 
-export function apiJSONDataWithPath(path) {
+export function apiJSONDataWithPath(path, method='get', body=null) {
   return new Promise( function (resolve) {
     var pathWithClientId = '';
     if (path.indexOf('?') > -1) {
@@ -44,9 +44,10 @@ export function apiJSONDataWithPath(path) {
     } else {
       pathWithClientId = path + '?client_id=' + process.env.CLIENT_ID;
     }
-    http.get({
+    http[method]({
       host: 'api.soundcloud.com',
-      path: pathWithClientId
+      path: pathWithClientId,
+      body,
     }, function (response) {
       console.log(this.path);
       var body = '';
