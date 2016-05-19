@@ -1,12 +1,14 @@
 import express from 'express';
-import { GraphQLSchema } from 'graphql'
-// import { exposeSchema } from './exposeSchema';
-// import { rootType } from './schema/root';
+
+import { 
+  GraphQLSchema,
+} from 'graphql'
+
 import { 
   rootQueryType,
   rootMutationType,
   rootSchemaType, 
-  exposeSchema, 
+  exposeSchema,
 } from './index';
 
 

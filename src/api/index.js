@@ -8,3 +8,7 @@ export function JSONDataWithPath(path) {
     return apiJSONDataWithPath(path);
   }
 }
+
+export function followUser(userId, followingId) {
+  return JSONDataWithPath(`/users/${userId}/followings/${followingId}`, 'put');
+}

@@ -1,3 +1,20 @@
+// INVESTIGATE WHY NEED TO EXPORT THE SAME GRAPHQL INSTANCE!!
+
+export {
+  graphql,
+  GraphQLSchema,
+  GraphQLBoolean,
+  GraphQLString,  
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLInt,
+} from 'graphql';
+
+export {
+  mutationWithClientMutationId
+} from 'graphql-relay';
+
 export { 
   exposeSchema
 } from './exposeSchema'; 
@@ -40,10 +57,5 @@ export {
 } from './schema/types/user';
 
 export {
-  GraphQLSchema,
-  GraphQLBoolean,
-  GraphQLString,  
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLID,
-} from 'graphql';
+  followUser,
+} from './api'

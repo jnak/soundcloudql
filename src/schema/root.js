@@ -99,14 +99,14 @@ export const rootQueryType = new GraphQLObjectType({
   })
 });
 
-export const rootMutationType = new GraphQLObjectType({
-  name: 'RootMutation',
-  fields: () => {
-    return {
-      id: {
-        type: new GraphQLNonNull(GraphQLID),
-        description: 'Find playlist by id',
-      }
-    }
-  },
-});
+// export const rootMutationType = new GraphQLObjectType({
+//   name: 'RootMutation',
+//   fields: () => {
+//     return {
+//       id: {
+//         type: new GraphQLNonNull(GraphQLID),
+//         description: 'Find playlist by id',
+//       }
+//     }
+//   },
+// });
