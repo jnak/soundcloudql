@@ -37,6 +37,11 @@ export const CommentType = new GraphQLObjectType({
       description: 'The position of the comment on the track in milliseconds.',
 
     },
+    createdAt: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'The creation date of the comment.',
+      resolve: (comment) => comment.created_at
+    },
     user: {
       type: new GraphQLNonNull(UserType),
       description: 'The user who posted the comment.',
